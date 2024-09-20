@@ -31,7 +31,7 @@
       <input type="text" v-model="Postsdata.tags" class="form-control" id="inlineFormInputName" placeholder="Tags">
     </div>
     <div class="col-auto my-1">
-   <button  v-on:click="PostsData" class="btn btn-primary">Post Data</button>
+   <button  v-on:click="PostData" class="btn btn-primary">Post Data</button>
     </div>
   </div>
 
@@ -119,33 +119,49 @@ export default {
      methods:{
         getTokenconfig(){
          var token=JSON.parse(localStorage.getItem('token'));
+         //console.log(token);
          const config={
             headers: {
-                'accept': 'application/json',
-                'Content-type': 'application/json',
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer $'{token}`
                 
                 }
          };
+         
          return config;
         },
     async PostswithPagnation(){
 
       let res=   await axios.get(`https://blogs.kingofkey.net/api/posts?page=${this.PwithPagnation.page}&tag=${this.PwithPagnation.tag}&search=${this.PwithPagnation.search}`)
       this.getAlldata=res.data.data;
-      console.log(res.data.data.data);
+      console.log(res.data.data);
 
     },
-     async PostsData(){
+     PostData(){
       //console.log(this.Postsdata);
        // var formdata= new FormData();
        // for(var key in this.Postsdata){
           //   formdata.append(key,this.Postsdata[key]);
        // }
 
-      let res=  await axios.post("https://blogs.kingofkey.net/api/posts",this.Postsdata,this.getTokenconfig())  
-      this.getAlldata=res.data.data;
-      console.log(res.data.data.data);
+        var token=JSON.parse(localStorage.getItem('token'));
+// "266|5KKZH7NXLdqFgThTvqVB52KNwG6mWP6h6OY837rq0f6ca12e"
+
+       axios.post("https://blogs.kingofkey.net/api/posts",this.Postsdata,{
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer '+token
+          }})  
+      .then((response) => {
+       
+        console.log('response',response.data.data)
+
+      })
+      .catch((error) => {
+        console.log('error',error.response)
+        
+
+      })
 
     },
 
